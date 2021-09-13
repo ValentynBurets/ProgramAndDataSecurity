@@ -1,0 +1,46 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31515.178
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MD5Hashing", "ProgramAndDataSecurity\MD5Hashing.csproj", "{E5B04E9E-1734-44BD-8071-08E72A071A3D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PseudoRundomNumberGenerator", "..\..\ProgramAndDataSecurity\Lab1\Lab1\Lab1\PseudoRundomNumberGenerator.csproj", "{988C901F-517D-440D-9614-24C53A31C693}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MD5_HashingProject", "MD5_HashingProject", "{0EDFA4F5-9AB0-460F-A9C7-45DDDBCBA9EA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Number_generatorProject", "Number_generatorProject", "{9B57B5CF-F516-44D4-97D5-8A137D502017}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HashingAlgorithm", "HashingAlgorithm\HashingAlgorithm.csproj", "{7CD897CB-EB2F-4756-B829-381DB2DF0B49}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E5B04E9E-1734-44BD-8071-08E72A071A3D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E5B04E9E-1734-44BD-8071-08E72A071A3D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E5B04E9E-1734-44BD-8071-08E72A071A3D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E5B04E9E-1734-44BD-8071-08E72A071A3D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{988C901F-517D-440D-9614-24C53A31C693}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{988C901F-517D-440D-9614-24C53A31C693}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{988C901F-517D-440D-9614-24C53A31C693}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{988C901F-517D-440D-9614-24C53A31C693}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7CD897CB-EB2F-4756-B829-381DB2DF0B49}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7CD897CB-EB2F-4756-B829-381DB2DF0B49}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7CD897CB-EB2F-4756-B829-381DB2DF0B49}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7CD897CB-EB2F-4756-B829-381DB2DF0B49}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{E5B04E9E-1734-44BD-8071-08E72A071A3D} = {0EDFA4F5-9AB0-460F-A9C7-45DDDBCBA9EA}
+		{988C901F-517D-440D-9614-24C53A31C693} = {9B57B5CF-F516-44D4-97D5-8A137D502017}
+		{7CD897CB-EB2F-4756-B829-381DB2DF0B49} = {0EDFA4F5-9AB0-460F-A9C7-45DDDBCBA9EA}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DD073EB2-5D8B-4405-869E-0F9468911BA5}
+	EndGlobalSection
+EndGlobal
