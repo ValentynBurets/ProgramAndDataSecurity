@@ -43,18 +43,23 @@ namespace HashingAlgorithm.Concrete
             return MemberwiseClone() as MD_Buffer;
         }
 
-        internal void MD5IterationSwap(UInt32 F, UInt32[] X, UInt32 i, UInt32 k)
+        internal void MD5IterationSwap(UInt32 F, UInt32[] X, UInt32 k, UInt32 g)
         {
             var tempD = D;
             D = C;
             C = B;
-            B += BitsHelper.LeftRotate(A + F + X[k] + MD5Constants.T[i], MD5Constants.S[i]);
+            B += BitsHelper.LeftRotate(A + F + MD5Constants.T[k] + X[g], MD5Constants.S[k]);
             A = tempD;
         }
 
         public override String ToString()
         {
             return $"{ToByteString(A)}{ToByteString(B)}{ToByteString(C)}{ToByteString(D)}";
+        }
+
+        private static string ToByteString(UInt32 x)
+        {
+            return string.Join(string.Empty, BitConverter.GetBytes(x).Select(y => y.ToString("x2")));
         }
 
         public override Int32 GetHashCode()
@@ -77,11 +82,6 @@ namespace HashingAlgorithm.Concrete
                 C = left.C + right.C,
                 D = left.D + right.D
             };
-        }
-
-        private static string ToByteString(UInt32 x)
-        {
-            return string.Join(string.Empty, BitConverter.GetBytes(x).Select(y => y.ToString("x2")));
         }
 
     }

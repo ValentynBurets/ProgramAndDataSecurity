@@ -9,27 +9,27 @@ namespace HashingAlgorithm.Helpers
 {
     internal static class BitsHelper
     {
-        /// <summary>
-        /// Extracts <see langword="UInt32"/> words array
-        /// </summary>
-        public static UInt32[] Extract32BitWords(Byte[] message, UInt32 blockNo, UInt32 blockSizeInBytes)
-        {
-            var messageStartIndex = blockNo * blockSizeInBytes;
-            var extractedArray = new UInt32[blockSizeInBytes / MD5Constants.BytesPer32BitWord];
+        ///// <summary>
+        ///// Extracts <see langword="UInt32"/> words array
+        ///// </summary>
+        //public static UInt32[] Extract32BitWords(Byte[] message, UInt32 blockNo, UInt32 blockSizeInBytes)
+        //{
+        //    var messageStartIndex = blockNo * blockSizeInBytes;
+        //    var extractedArray = new UInt32[blockSizeInBytes / MD5Constants.BytesPer32BitWord];
 
-            for (UInt32 i = 0; i < blockSizeInBytes; i += MD5Constants.BytesPer32BitWord)
-            {
-                var j = messageStartIndex + i;
+        //    for (UInt32 i = 0; i < blockSizeInBytes; i += MD5Constants.BytesPer32BitWord)
+        //    {
+        //        var j = messageStartIndex + i;
 
-                extractedArray[i / MD5Constants.BytesPer32BitWord] = // form 32-bit word from four bytes
-                      message[j]                                                   // first byte
-                    | (((UInt32)message[j + 1]) << ((Int32)MD5Constants.BitsPerByte * 1))  // second byte
-                    | (((UInt32)message[j + 2]) << ((Int32)MD5Constants.BitsPerByte * 2))  // third byte
-                    | (((UInt32)message[j + 3]) << ((Int32)MD5Constants.BitsPerByte * 3)); // fourth byte
-            }
+        //        extractedArray[i / MD5Constants.BytesPer32BitWord] = // form 32-bit word from four bytes
+        //              message[j]                                                   // first byte
+        //            | (((UInt32)message[j + 1]) << ((Int32)MD5Constants.BitsPerByte * 1))  // second byte
+        //            | (((UInt32)message[j + 2]) << ((Int32)MD5Constants.BitsPerByte * 2))  // third byte
+        //            | (((UInt32)message[j + 3]) << ((Int32)MD5Constants.BitsPerByte * 3)); // fourth byte
+        //    }
 
-            return extractedArray;
-        }
+        //    return extractedArray;
+        //}
 
         /// <summary>
         /// Shifts value bits for <paramref name="shiftValue"/>

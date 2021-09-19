@@ -40,28 +40,32 @@ namespace Lab1.LogicModule
 
                 
                 ulong zeroNumber = options.StartValue;
-                ulong currentNumber = zeroNumber;
                 ulong firstNumber = 0;
+                ulong currentNumber = zeroNumber;
+                ulong nextNumber = 0;
                 ulong numbersGenerated = 1;
 
                 bool isPeriodFound = false;
                 bool isMaxToUi = false;
 
                 var generatedData = new List<ulong>();
-                generatedData.Add(firstNumber);
+                generatedData.Add(nextNumber);
 
 
             using (var writer = File.CreateText(outputFileName))
             {
                 while (!isPeriodFound)
                 {
-                    firstNumber = (a * currentNumber + c) % m;
+                    nextNumber = (a * currentNumber + c) % m;
                     numbersGenerated++;
 
                     if (token.IsCancellationRequested)
                         break;
 
-                    if (!isPeriodFound && (firstNumber == zeroNumber || firstNumber == currentNumber))
+                    if (numbersGenerated == 2)
+                        firstNumber = nextNumber;
+
+                    if ((nextNumber == zeroNumber || nextNumber == currentNumber || firstNumber == nextNumber) && numbersGenerated > 3)
                     {
                         LogMessageToUI?.Invoke(
                             $"\nSequence interval period found, unique count: "
@@ -77,7 +81,7 @@ namespace Lab1.LogicModule
 
                     if (!isPeriodFound)
                     {
-                        numbers.Add(firstNumber);
+                        numbers.Add(nextNumber);
 
                         if (numbers.Count > 100_000)
                         {
@@ -88,12 +92,12 @@ namespace Lab1.LogicModule
                     }
                     if (isPeriodFound)
                     {
-                        numbers.Add(firstNumber);
+                        numbers.Add(nextNumber);
                         await writer.WriteAsync(string.Join(" ", numbers));
                         numbers.Clear();
                     }
                     if (!isMaxToUi)
-                        NumberGeneratedOutput?.Invoke(" " + firstNumber + " ");
+                        NumberGeneratedOutput?.Invoke(" " + nextNumber + " ");
 
                     //----------------------
 
@@ -104,7 +108,7 @@ namespace Lab1.LogicModule
                         await writer.FlushAsync();
                     }
 
-                    currentNumber = firstNumber;
+                    currentNumber = nextNumber;
                 }
 
                 NumbersGenerated?.Invoke(numbersGenerated);
