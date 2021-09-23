@@ -1,5 +1,7 @@
 using HashingAlgorithm.Concrete;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.IO;
+using System.Text;
 
 namespace Test
 {
@@ -21,6 +23,34 @@ namespace Test
 
             Assert.AreEqual(hasher.HashAsString.ToUpper(), expectedHash);
 
+        }
+
+
+        [DataRow("Data/TestFile.txt")]
+        [DataRow("Data/TestFile_2.txt")]
+        [DataRow("Data/test_file")]
+        [DataTestMethod]
+        public void HashesFileSameAsCryptoImpl(string filePath)
+        {
+            var message = File.ReadAllBytes(filePath);
+            var hasher = new MD5();
+            hasher.ComputeFileHashAsync(filePath).Wait();
+
+            Assert.AreEqual(CreateMD5(message).ToUpper(), hasher.HashAsString.ToUpper());
+        }
+
+        public static string CreateMD5(byte[] inputBytes)
+        {
+            using var md5 = System.Security.Cryptography.MD5.Create();
+            byte[] hashedBytes = md5.ComputeHash(inputBytes);
+
+            var sb = new StringBuilder();
+            for (int i = 0; i < hashedBytes.Length; i++)
+            {
+                sb.Append(hashedBytes[i].ToString("test"));
+            }
+
+            return sb.ToString();
         }
     }
 }

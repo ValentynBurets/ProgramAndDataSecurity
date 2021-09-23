@@ -1,15 +1,18 @@
 ﻿using HashingAlgorithm.Constants;
 using HashingAlgorithm.Helpers;
 using System;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace HashingAlgorithm.Concrete
 {
     public sealed class MD5
     {
         private const int OptimalChunkSizeMultiplier = 100_000;
- 
+        private const UInt32 OptimalChunkSize = MD5Constants.BytesCountPerBits512Block * OptimalChunkSizeMultiplier;
+
         public MD_Buffer Hash { get; private set; }
 
         public string HashAsString => Hash.ToString();
@@ -49,59 +52,72 @@ namespace HashingAlgorithm.Concrete
         //    return string.Join(string.Empty, BitConverter.GetBytes(x).Select(y => y.ToString("x2")));
         //}
 
-        //public async Task<MD_Buffer> ComputeFileHashAsync(String filePath)
-        //{
-        //    Hash = MD_Buffer.InitialValue;
-
-        //    using (var fs = File.OpenRead(filePath))
-        //    {
-        //        UInt64 totalBytesRead = 0;
-        //        Int32 currentBytesRead = 0;
-        //        bool isFileEnd = false;
-
-        //        do
-        //        {
-        //            var chunk = new Byte[OptimalChunkSize];
-
-        //            currentBytesRead = await fs.ReadAsync(chunk, 0, chunk.Length);
-        //            totalBytesRead += (UInt64)currentBytesRead;
+        public async Task<string> GetFileHashAsync(String filePath)
+        {
+            await ComputeFileHashAsync(filePath);
+            return HashAsString;
+        }
 
 
-        //            if (currentBytesRead < chunk.Length)
-        //            {
-        //                Byte[] lastChunk;
+        public async Task<MD_Buffer> ComputeFileHashAsync(String filePath)
+        {
+            Hash = MD_Buffer.InitialValue;
 
-        //                if (currentBytesRead == 0)
-        //                {
-        //                    lastChunk = GetMessagePadding(totalBytesRead);
-        //                }
-        //                else
-        //                {
-        //                    lastChunk = new Byte[currentBytesRead];
-        //                    Array.Copy(chunk, lastChunk, currentBytesRead);
+            using (var fs = File.OpenRead(filePath))
+            {
+                UInt64 totalBytesRead = 0;
+                Int32 currentBytesRead = 0;
+                bool isFileEnd = false;
 
-        //                    lastChunk = JoinArrays(lastChunk, GetMessagePadding(totalBytesRead));
-        //                }
+                do
+                {
+                    var chunk = new Byte[OptimalChunkSize];
 
-        //                chunk = lastChunk;
-        //                isFileEnd = true;
-        //            }
+                    currentBytesRead = await fs.ReadAsync(chunk, 0, chunk.Length);
+                    totalBytesRead += (UInt64)currentBytesRead;
 
-        //            for (UInt32 bNo = 0; bNo < chunk.Length / MD5Constants.BytesCountPerBits512Block; ++bNo)
-        //            {
-        //                UInt32[] X = BitsHelper.Extract32BitWords(
-        //                    chunk,
-        //                    bNo,
-        //                    MD5Constants.Words32BitArraySize * MD5Constants.BytesPer32BitWord);
 
-        //                FeedMessageBlockToBeHashed(X);
-        //            }
-        //        }
-        //        while (isFileEnd == false);
-        //    }
+                    if (currentBytesRead < chunk.Length)
+                    {
+                        Byte[] lastChunk;
 
-        //    return Hash;
-        //}
+                        if (currentBytesRead == 0)
+                        {
+                            lastChunk = GetMessagePadding(totalBytesRead);
+                        }
+                        else
+                        {
+                            lastChunk = new Byte[currentBytesRead];
+                            Array.Copy(chunk, lastChunk, currentBytesRead);
+
+                            lastChunk = JoinArrays(lastChunk, GetMessagePadding(totalBytesRead));
+                        }
+
+                        chunk = lastChunk;
+                        isFileEnd = true;
+                    }
+
+                    for (int i = 0; i < chunk.Length / MD5Constants.BytesCountPerBits512Block; ++i)
+                    {
+                        uint[] X = new uint[32];
+
+                        //copy the input to X array
+                        for (int j = 0; j < 16; ++j)
+                            X[j] = BitConverter.ToUInt32(chunk, (i * 64) + (j * 4));
+    
+                        //BitsHelper.Extract32BitWords(
+                        //    chunk,
+                        //    bNo,
+                        //    MD5Constants.Words32BitArraySize * MD5Constants.BytesPer32BitWord);
+
+                        FeedMessageBlockToBeHashed(X);
+                    }
+                }
+                while (isFileEnd == false);
+            }
+
+            return Hash;
+        }
 
         private void FeedMessageBlockToBeHashed(UInt32[] X)
         {
