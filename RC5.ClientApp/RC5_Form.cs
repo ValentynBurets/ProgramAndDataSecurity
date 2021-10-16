@@ -27,7 +27,7 @@ namespace RC5_ClientApp
                 Rounds = 8,
                 WordLength = 16
             });
-
+            InitializeComponent();
         }
 
         private void ChooseFileBtn_Click(object sender, EventArgs e)
@@ -57,14 +57,22 @@ namespace RC5_ClientApp
                     .GetBytes(password.Text)
                     .GetMD5HashedKeyForRC5(KeyLength);
 
+
+                byte[] keyArr = new byte[8];
+                Array.Copy(hashedKey, 0, keyArr, 0, 8);
+
                 var encodedFileContent = _rc5.EncipherCBCPAD(
                     File.ReadAllBytes(_filePath),
-                    hashedKey);
+                    keyArr);
 
+               
                 File.WriteAllBytes(PaddFilename(_filePath, "-enc"), encodedFileContent);
 
                 MessageBox.Show("Enciphered", "RC5");
 
+                var temp_str = _filePath.Split('.');
+
+                _filePath = temp_str[0] + "-enc." + temp_str[1];
             }
             catch (Exception ex)
             {
@@ -84,21 +92,19 @@ namespace RC5_ClientApp
 
         private void DecipherBtn_Click(object sender, EventArgs e)
         {
-            if (!File.Exists(_filePath))
-            {
-                MessageBox.Show("File not choosen!", "RC5");
-
-                return;
-            }
+            
             try
             {
                 var hashedKey = Encoding.UTF8
                 .GetBytes(password.Text)
                 .GetMD5HashedKeyForRC5(KeyLength);
 
+                byte[] keyArr = new byte[8];
+                Array.Copy(hashedKey, 0, keyArr, 0, 8);
+
                 var decodedFileContent = _rc5.DecipherCBCPAD(
                     File.ReadAllBytes(_filePath),
-                    hashedKey);
+                    keyArr);
 
                 File.WriteAllBytes(PaddFilename(_filePath, "-dec"), decodedFileContent);
 

@@ -101,7 +101,6 @@ namespace RC5_ClientApp
             this.Controls.Add(this.filePathTextBox);
             this.Controls.Add(this.password);
             this.Controls.Add(this.label1);
-            this.Enabled = false;
             this.Name = "RC5_Client";
             this.Text = "RC5";
             this.ResumeLayout(false);

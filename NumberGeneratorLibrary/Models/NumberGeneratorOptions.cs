@@ -10,12 +10,20 @@ namespace NumberGeneratorLibrary.Models
     {
         static NumberGeneratorOptions()
         {
+            //Default = new NumberGeneratorOptions
+            //{
+            //    Mod = (ulong)Math.Pow(2, 26) - 1,
+            //    Cummulative = 1597,
+            //    Multiplier = (ulong)Math.Pow(13, 3),
+            //    StartValue = 13
+            //};
+
             Default = new NumberGeneratorOptions
             {
-                Mod = (ulong)Math.Pow(2, 26) - 1,
-                Cummulative = 1597,
-                Multiplier = (ulong)Math.Pow(13, 3),
-                StartValue = 13
+                Mod = (ulong)Math.Pow(2, 31) - 1,
+                Cummulative = 17711,
+                Multiplier = (ulong)Math.Pow(7, 5),
+                StartValue = 31
             };
 
             //Optimal = new NumberGeneratorOptions

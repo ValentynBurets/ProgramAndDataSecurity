@@ -1,6 +1,7 @@
 ﻿using HashingAlgorithm.Helpers;
 using NumberGeneratorLibrary.Concrete;
 using NumberGeneratorLibrary.Models;
+using RC5_Constantsryptography.Model;
 using RC5Cryptography.Constants;
 using RC5Cryptography.Extensions;
 using RC5Cryptography.Options;
@@ -15,15 +16,14 @@ namespace RC5Cryptography
     {
 
         private readonly NumberGenerator _numberGenerator;
-        private readonly Word32BitFactory _wordsFactory;
+        private readonly Word16BitFactory _wordsFactory;
         private readonly Int32 _roundsCount;
-        //AlgorithmSettings algorithmSettings;
 
         public RC5(AlgorithmSettings algorithmSettings)
         {
             _numberGenerator = new NumberGenerator(NumberGeneratorOptions.Default);
 
-            _wordsFactory = new Word32BitFactory();
+            _wordsFactory = new Word16BitFactory();
             _roundsCount = (int)algorithmSettings.Rounds;
         }
 
@@ -61,11 +61,18 @@ namespace RC5Cryptography
             return encodedFileContent;
         }
 
-        private void EncipherECB(Byte[] inBytes, Byte[] outBytes, Int32 inStart, Int32 outStart, Word32Bit[] s)
+
+        //generator.X = 13;
+        //    generator.A = (ulong) Math.Pow(13, 3);
+        //generator.M = (ulong) Math.Pow(2, 26) - 1;
+        //    generator.C = 1597;
+
+
+        private void EncipherECB(Byte[] inBytes, Byte[] outBytes, Int32 inStart, Int32 outStart, Word16Bit[] s)
         {
             var a = _wordsFactory.CreateFromBytes(inBytes, inStart);
             var b = _wordsFactory.CreateFromBytes(inBytes, inStart + _wordsFactory.BytesPerWord);
-
+            
             a.Add(s[0]);
             b.Add(s[1]);
             
@@ -120,7 +127,7 @@ namespace RC5Cryptography
             return decodedWithoutPadding;
         }
 
-        private void DecipherECB(Byte[] inBuf, Byte[] outBuf, Int32 inStart, Int32 outStart, Word32Bit[] s)
+        private void DecipherECB(Byte[] inBuf, Byte[] outBuf, Int32 inStart, Int32 outStart, Word16Bit[] s)
         {
             var a = _wordsFactory.CreateFromBytes(inBuf, inStart);
             var b = _wordsFactory.CreateFromBytes(inBuf, inStart + _wordsFactory.BytesPerWord);
@@ -156,7 +163,9 @@ namespace RC5Cryptography
         {
             var ivParts = new List<Byte[]>();
 
-            while (ivParts.Sum(ivp => ivp.Length) < _wordsFactory.BytesPerBlock)
+            //BytesPerBlock == 4
+
+            while (ivParts.Count() < _wordsFactory.BytesPerBlock)
             {
                 ivParts.Add(BitConverter.GetBytes(_numberGenerator.NextNumber()));
             }
@@ -165,13 +174,13 @@ namespace RC5Cryptography
         }
 
 
-        private Word32Bit[] BuildExpandedKeyTable(Byte[] key)
+        private Word16Bit[] BuildExpandedKeyTable(Byte[] key)
         {
             var keysWordArrLength = key.Length % _wordsFactory.BytesPerWord > 0
                 ? key.Length / _wordsFactory.BytesPerWord + 1
                 : key.Length / _wordsFactory.BytesPerWord;
 
-            var lArr = new Word32Bit[keysWordArrLength];
+            var lArr = new Word16Bit[keysWordArrLength];
 
             for (int i = 0; i < lArr.Length; i++)
             {
@@ -183,7 +192,7 @@ namespace RC5Cryptography
                 lArr[i / _wordsFactory.BytesPerWord].ROL(RC5_Constants.BitsPerByte).Add(key[i]);
             }
 
-            var sArray = new Word32Bit[2 * (_roundsCount + 1)];
+            var sArray = new Word16Bit[2 * (_roundsCount + 1)];
             sArray[0] = _wordsFactory.CreateP();
             var q = _wordsFactory.CreateQ();
 

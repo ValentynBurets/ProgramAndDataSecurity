@@ -22,9 +22,6 @@ namespace RC5Cryptography.Extensions
             var hasher = new MD5();
             var bytesHash = hasher.ComputeHash(key).ToByteArray();
 
-            
-            bytesHash = bytesHash.Take(bytesHash.Length / 2).ToArray();
-
             if (bytesHash.Length != (int)length)
             {
                 throw new InvalidOperationException(

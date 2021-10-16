@@ -26,13 +26,13 @@ namespace NumberGeneratorLibrary.Concrete
 
         public ulong NextNumber()
         {
-            var nextNumber = _currentNumber;
-
-            _currentNumber = SequenceFormula(
+            var nextNumber = SequenceFormula(
                 _multiplier,
                 _cummulative,
                 _mod,
-                nextNumber);
+                _currentNumber);
+
+            _currentNumber = nextNumber;
 
             return nextNumber;
         }
