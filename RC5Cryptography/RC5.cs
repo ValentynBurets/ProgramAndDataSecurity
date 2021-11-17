@@ -29,7 +29,9 @@ namespace RC5Cryptography
 
         public Byte[] EncipherCBCPAD(Byte[] input, Byte[] key)
         {
+            //quatity of bits to full block
             var paddedBytes = ArraysHelper.ConcatArrays(input, GetPadding(input));
+            
             var bytesPerBlock = _wordsFactory.BytesPerBlock;
             var s = BuildExpandedKeyTable(key);
             var cnPrev = GetRandomBytesForInitVector().Take(bytesPerBlock).ToArray();
@@ -176,17 +178,23 @@ namespace RC5Cryptography
 
         private Word16Bit[] BuildExpandedKeyTable(Byte[] key)
         {
+
+            // Byte[] key
+            // md5 key
+
             var keysWordArrLength = key.Length % _wordsFactory.BytesPerWord > 0
                 ? key.Length / _wordsFactory.BytesPerWord + 1
                 : key.Length / _wordsFactory.BytesPerWord;
 
             var lArr = new Word16Bit[keysWordArrLength];
 
+            //create empty array of 16BitWords
             for (int i = 0; i < lArr.Length; i++)
             {
                 lArr[i] = _wordsFactory.Create();
             }
 
+            //
             for (var i = key.Length - 1; i >= 0; i--)
             {
                 lArr[i / _wordsFactory.BytesPerWord].ROL(RC5_Constants.BitsPerByte).Add(key[i]);
